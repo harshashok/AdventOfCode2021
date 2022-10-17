@@ -62,17 +62,23 @@ namespace AdventOfCode2021
             return gammaRate*epsilonRate;
         }
 
+        /**
+         * SOLUTION : 2784375
+         */
         [Solution("Day3", "2")]
         public int solvePart2()
         {
-            ReadInputFile f = new ReadInputFile(sampleFile);
+            ReadInputFile f = new ReadInputFile(FileConstants.INPUT_DAY_3);
             BitArray[] bitsArray = f.ReadInputToByteArray();
+            BitArray[] oxygenRatings = new BitArray[bitsArray.Length];
+            BitArray[] carbonRatings = new BitArray[bitsArray.Length];
+            bitsArray.CopyTo(oxygenRatings, 0);
+            bitsArray.CopyTo(carbonRatings, 0);
 
             int j = 0;
-            while(bitsArray.Length > 1)
+            while(oxygenRatings.Length > 1)
             {
-                int listLength = bitsArray.Length;
-                int arraySize = bitsArray[0].Length;
+                int listLength = oxygenRatings.Length;
 
                 //counters to calculate column sums of 0's and 1's
                 int total_zeroes = 0;
@@ -84,45 +90,103 @@ namespace AdventOfCode2021
                 //Find the sum of each column
                 for (int i = 0; i < listLength; i++)
                 {
-                    if (bitsArray[i].Get(j))
+                    if (oxygenRatings[i].Get(j))
                     {
-                        ones_array.Add(bitsArray[i]);
+                        ones_array.Add(oxygenRatings[i]);
                         total_ones++;
                     }
                     else
                     {
-                        zero_array.Add(bitsArray[i]);
+                        zero_array.Add(oxygenRatings[i]);
                         total_zeroes++;
                     }
                 }
 
-                if (total_ones >= total_zeroes)
+                if(oxygenRatings.Length > 1)
                 {
-                    bitsArray = ones_array.Cast<BitArray>().ToArray();
-                }
-                else
-                {
-                    bitsArray = zero_array.Cast<BitArray>().ToArray();
+                    if (total_ones >= total_zeroes)
+                    {
+                        oxygenRatings = ones_array.Cast<BitArray>().ToArray();
+                    }
+                    else
+                    {
+                        oxygenRatings = zero_array.Cast<BitArray>().ToArray();
+                    }
                 }
                 j++;
             }
 
-            //copying the result because converter does something funky on mac intel processors.
-            int[] res = new int[bitsArray[0].Length];
-            for (int a = 0; a < bitsArray[0].Length; a++)
+            j = 0;
+            while (carbonRatings.Length > 1)
             {
-                if (bitsArray[0].Get(a))
+                int listLength = carbonRatings.Length;
+
+                //counters to calculate column sums of 0's and 1's
+                int total_zeroes = 0;
+                int total_ones = 0;
+
+                ArrayList ones_array = new ArrayList();
+                ArrayList zero_array = new ArrayList();
+
+                //Find the sum of each column
+                for (int i = 0; i < listLength; i++)
+                {
+                    if (carbonRatings[i].Get(j))
+                    {
+                        ones_array.Add(carbonRatings[i]);
+                        total_ones++;
+                    }
+                    else
+                    {
+                        zero_array.Add(carbonRatings[i]);
+                        total_zeroes++;
+                    }
+                }
+
+                if(carbonRatings.Length > 1)
+                {
+                    if (total_zeroes <= total_ones)
+                    {
+                        carbonRatings = zero_array.Cast<BitArray>().ToArray();
+                    }
+                    else
+                    {
+                        carbonRatings = ones_array.Cast<BitArray>().ToArray();
+                    }
+                }
+
+                j++;
+            }
+
+            //copying the result because converter does something funky on mac intel processors.
+            int[] res = new int[oxygenRatings[0].Length];
+            for (int a = 0; a < oxygenRatings[0].Length; a++)
+            {
+                if (oxygenRatings[0].Get(a))
                     res[a] = 1;
                 else
                     res[a] = 0;
             }
 
-            string result = string.Join("", res);
-            Console.WriteLine("resultString : {0}", result);
-            int o2 = Convert.ToInt32(result, 2);
-            Console.WriteLine("res converted value : "+o2);
+            int[] res2 = new int[carbonRatings[0].Length];
+            for (int a = 0; a < carbonRatings[0].Length; a++)
+            {
+                if (carbonRatings[0].Get(a))
+                    res2[a] = 1;
+                else
+                    res2[a] = 0;
+            }
 
-            return o2;
+            string result = string.Join("", res);
+            //Console.WriteLine("resultString o2 : {0}", result);
+            //Console.WriteLine("resultString co2 : {0}", string.Join("", res2));
+
+            int o2 = Convert.ToInt32(string.Join("", res), 2);
+            //Console.WriteLine("O2 converted value : "+o2);
+            int co2 = Convert.ToInt32(string.Join("", res2), 2);
+            //Console.WriteLine("CO2 converted value : " + co2);
+
+            return o2*co2;
         }
     }
 }
