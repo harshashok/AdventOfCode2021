@@ -8,8 +8,12 @@ namespace AdventOfCode2021.Puzzles
     {
 
         IEnumerable<int> bingoNumbers;
+        List<Board> boards;
+        List<Soln> winningBoardsInOrder = new List<Soln>();
         public Day4()
         {
+            boards = new List<Board>();
+            winningBoardsInOrder = new List<Soln>();
         }
 
         [Solution("Day4", "1")]
@@ -17,12 +21,17 @@ namespace AdventOfCode2021.Puzzles
         {
 
             ReadBoardData();
-            //(int, bool) t1 = (1, false);
-            //var coords = new[] { (50, false), (50, true), (450, false) };
+            
+            var solution = PlayBingo();
+            return solution.finalScore();
+        }
 
-            //(int, bool)[,] result = new (int, bool)[3,2];
-            //(int, bool)[][] result2 = new (int, bool)[3][];
-            return 1;
+        [Solution("Day4", "2")]
+        public int solve2()
+        {
+
+            ReadBoardData();
+            return -1;
         }
 
         private void ReadBoardData()
@@ -33,7 +42,6 @@ namespace AdventOfCode2021.Puzzles
             bingoNumbers = lines.First().Split(',').Select(x => Int32.Parse(x)); //TODO : use yeild to get items
             lines.RemoveAt(0);
 
-            List<Board> boards = new List<Board>();
             Board b = new Board(5);
             int i = 0;
 
@@ -47,7 +55,7 @@ namespace AdventOfCode2021.Puzzles
 
                     b.board[i++] = cNumbers;
 
-                    if(i == 5)
+                    if (i == 5)
                     {
                         boards.Add(b);
                         b = new Board(5);
@@ -55,8 +63,53 @@ namespace AdventOfCode2021.Puzzles
                     }
                 }
             }
-            
+
             Console.WriteLine("Number of boards : {0}", boards.Count);
+        }
+
+        private Soln PlayBingo()
+        {
+            List<Soln> winningBoardsInOrder = new List<Soln>();
+            var nextNumberGenerator = GetNextBingoNumber().GetEnumerator();
+            var _ = nextNumberGenerator.MoveNext;
+            //int number = nextNumberGenerator.Current;
+            while (nextNumberGenerator.MoveNext())
+            {
+                int number = nextNumberGenerator.Current;
+                foreach (Board b in boards)
+                {
+                    //mark number in board and increment counters for each.
+                    for (int i = 0; i < 5; i++)
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            if (b.board[i][j].Item1 == number)
+                            {
+                                b.board[i][j].Item2 = true;
+                                b.row_counter[i] += 1;
+                                b.col_counter[j] += 1;
+
+                                for (int x = 0; x < 5; x++)
+                                {
+                                    if (b.row_counter[x] >= 5 || b.col_counter[x] >= 5)
+                                    {
+                                        return new Soln(b, number);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        private IEnumerable<int> GetNextBingoNumber()
+        {
+            foreach (int num in bingoNumbers)
+            {
+                yield return num;
+            }
         }
 
         internal class Board
@@ -70,6 +123,41 @@ namespace AdventOfCode2021.Puzzles
                 board = new (int, bool)[size][];
                 col_counter = new int[size];
                 row_counter = new int[size];
+            }
+        }
+
+        internal class Soln
+        {
+            public Board winner { get; }
+            public int winningNumber;
+
+            internal Soln(Board board, int win)
+            {
+                this.winner = board;
+                this.winningNumber = win;
+            }
+
+            public int calculateUnmarkedSum()
+            {
+                var board = winner.board;
+                int sum = 0;
+                for(int i = 0; i < 5; i++)
+                {
+                    for(int j = 0; j< 5; j++)
+                    {
+                        if(board[i][j].Item2 == false)
+                        {
+                            sum += board[i][j].Item1;
+                        }
+                    }
+                }
+
+                return sum;
+            }
+
+            public int finalScore()
+            {
+                return calculateUnmarkedSum() * winningNumber;
             }
         }
     }

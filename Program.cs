@@ -9,6 +9,8 @@
         static void Main(string[] args)
         {
             InvokeSolution("Day4", "1");
+            //var t = Assembly.GetEntryAssembly();
+            //Console.WriteLine(t.ToString());
         }
 
         public static void InvokeSolution(string day, string part)
