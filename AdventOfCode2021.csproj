@@ -26,6 +26,9 @@
     <EmbeddedResource Include="Resources\sample3.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\day4_input.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Condition=" '$(EnableDefaultEmbeddedResourceItems)' == 'true' " Update="Resources.resx">
@@ -48,6 +51,7 @@
     <None Remove="Resources\day2_input.txt" />
     <None Remove="Puzzles\" />
     <None Remove="Resources\sample3.txt" />
+    <None Remove="Resources\day4_input.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Puzzles\" />

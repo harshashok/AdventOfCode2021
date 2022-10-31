@@ -56,5 +56,21 @@ namespace AdventOfCode2021
             }
             return bitsArray;
         }
+
+        public void ReadBingoBoardData()
+        {
+            string ll = lines.First();
+            IEnumerable<int> xx = ll.Split(',').Select(x => Int32.Parse(x)); //TODO : use yeild to get items
+            lines.RemoveAt(0);
+
+            int[,] board = new int[5,5];
+            foreach (string line in lines)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+
+                }
+            }
+        }
     }
 }
