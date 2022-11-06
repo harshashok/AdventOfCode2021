@@ -21,6 +21,14 @@ namespace AdventOfCode2021
             this.counter = lines.Count;
         }
 
+        public ReadInputFile(string filepath, int type)
+        {
+            if(type == 0)
+            {
+
+            }
+        }
+
         public int[] ReadInputToIntArray()
         {
             int[] intArray = new int[this.counter];
@@ -55,22 +63,6 @@ namespace AdventOfCode2021
                 Console.WriteLine();
             }
             return bitsArray;
-        }
-
-        public void ReadBingoBoardData()
-        {
-            string ll = lines.First();
-            IEnumerable<int> xx = ll.Split(',').Select(x => Int32.Parse(x)); //TODO : use yeild to get items
-            lines.RemoveAt(0);
-
-            int[,] board = new int[5,5];
-            foreach (string line in lines)
-            {
-                if (!string.IsNullOrWhiteSpace(line))
-                {
-
-                }
-            }
         }
     }
 }

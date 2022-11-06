@@ -19,11 +19,9 @@ namespace AdventOfCode2021.Puzzles
         [Solution("Day4", "1")]
         public int solve1()
         {
-
             ReadBoardData();
-            
-            var solution = PlayBingo();
-            return solution.finalScore();
+            PlayBingo();
+            return winningBoardsInOrder.FirstOrDefault().finalScore();
         }
 
         [Solution("Day4", "2")]
@@ -31,15 +29,17 @@ namespace AdventOfCode2021.Puzzles
         {
 
             ReadBoardData();
-            return -1;
+            PlayBingo();
+            var t = winningBoardsInOrder.LastOrDefault().finalScore();
+            return t;
         }
 
         private void ReadBoardData()
         {
-            ReadInputFile f = new ReadInputFile(FileConstants.SAMPLE);
+            ReadInputFile f = new ReadInputFile(FileConstants.INPUT_DAY_4);
 
             List<string> lines = f.lines;
-            bingoNumbers = lines.First().Split(',').Select(x => Int32.Parse(x)); //TODO : use yeild to get items
+            bingoNumbers = lines.First().Split(',').Select(x => Int32.Parse(x));
             lines.RemoveAt(0);
 
             Board b = new Board(5);
@@ -67,16 +67,15 @@ namespace AdventOfCode2021.Puzzles
             Console.WriteLine("Number of boards : {0}", boards.Count);
         }
 
-        private Soln PlayBingo()
+        private List<Soln> PlayBingo()
         {
-            List<Soln> winningBoardsInOrder = new List<Soln>();
             var nextNumberGenerator = GetNextBingoNumber().GetEnumerator();
             var _ = nextNumberGenerator.MoveNext;
             //int number = nextNumberGenerator.Current;
             while (nextNumberGenerator.MoveNext())
             {
                 int number = nextNumberGenerator.Current;
-                foreach (Board b in boards)
+                foreach (Board b in boards.ToArray())
                 {
                     //mark number in board and increment counters for each.
                     for (int i = 0; i < 5; i++)
@@ -93,7 +92,9 @@ namespace AdventOfCode2021.Puzzles
                                 {
                                     if (b.row_counter[x] >= 5 || b.col_counter[x] >= 5)
                                     {
-                                        return new Soln(b, number);
+                                        //return new Soln(b, number);
+                                        winningBoardsInOrder.Add(new Soln(b, number));
+                                        boards.Remove(b);
                                     }
                                 }
                             }
@@ -101,7 +102,7 @@ namespace AdventOfCode2021.Puzzles
                     }
                 }
             }
-            return null;
+            return winningBoardsInOrder;
         }
 
         private IEnumerable<int> GetNextBingoNumber()
