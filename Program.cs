@@ -8,7 +8,7 @@
     {
         static void Main(string[] args)
         {
-            InvokeSolution("Day4", "1");
+            InvokeSolution("Day5", "2");
             //var t = Assembly.GetEntryAssembly();
             //Console.WriteLine(t.ToString());
         }
