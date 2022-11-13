@@ -12,6 +12,7 @@ namespace AdventOfCode2021
         public static string INPUT_DAY_4 = @"./Resources/day4_input.txt";
         public static string INPUT_DAY_5 = @"./Resources/day5_input.txt";
         public static string INPUT_DAY_6 = @"./Resources/day6_input.txt";
+        public static string INPUT_DAY_7 = @"./Resources/day7_input.txt";
 
     }
 }

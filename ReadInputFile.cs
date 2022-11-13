@@ -5,19 +5,22 @@ namespace AdventOfCode2021
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.IO;
     public class ReadInputFile
     {
 
         string filePath; 
-        public List<string> lines; 
+        public List<string> lines;
+        public string input;
 
         public int counter;
 
         public ReadInputFile(string filepath)
         {
             this.filePath = filepath;
-            this.counter = 0;    
-            lines = new List<string> (System.IO.File.ReadLines(filepath)); 
+            this.counter = 0;
+            input = File.ReadAllText(filepath);
+            lines = new List<string> (File.ReadLines(filepath)); 
             this.counter = lines.Count;
         }
 
